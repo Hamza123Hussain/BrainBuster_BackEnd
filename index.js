@@ -1,10 +1,9 @@
 import express from 'express'
 import { Port } from './Config.js'
 import cors from 'cors'
-import SummaryRouter from './DB/Routes/SummaryRoute.js'
-
 import AuthRouter from './DB/Routes/AuthRouter.js'
 import QuestionAiRouter from './DB/Routes/QuestionAI.js'
+import UserRouter from './DB/Routes/UserRouter.js'
 
 const App = express()
 // Enable CORS for all origins
@@ -16,7 +15,7 @@ const corsOptions = {
 App.use(express.json())
 App.use(cors(corsOptions))
 
-App.use('/api/Summary', SummaryRouter)
+App.use('/api/User', UserRouter)
 App.use('/api/AIAsk', QuestionAiRouter)
 
 App.use('/api/Auth', AuthRouter)
