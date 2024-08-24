@@ -2,8 +2,9 @@ import express from 'express'
 import { Port } from './Config.js'
 import cors from 'cors'
 import SummaryRouter from './DB/Routes/SummaryRoute.js'
-import MusicRouter from './DB/Routes/MusicSuggestRoute.js'
+
 import AuthRouter from './DB/Routes/AuthRouter.js'
+import QuestionAiRouter from './DB/Routes/QuestionAI.js'
 
 const App = express()
 // Enable CORS for all origins
@@ -16,7 +17,7 @@ App.use(express.json())
 App.use(cors(corsOptions))
 
 App.use('/api/Summary', SummaryRouter)
-App.use('/api/Music', MusicRouter)
+App.use('/api/AIAsk', QuestionAiRouter)
 
 App.use('/api/Auth', AuthRouter)
 App.listen(Port, () => {
