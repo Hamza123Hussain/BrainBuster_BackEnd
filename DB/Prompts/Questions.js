@@ -1,4 +1,4 @@
-export const QuestionPrompt = (numberOfQuestions, topic) => {
+export const QuestionPrompt = (numberOfQuestions, topic, difficulty) => {
   return `
     You are an intelligent assistant that generates educational content. Create an array of ${numberOfQuestions} multiple-choice questions (MCQs) on the topic "${topic}". Each question should have the following format:
 
@@ -7,7 +7,7 @@ export const QuestionPrompt = (numberOfQuestions, topic) => {
     3. Correct Answer: Indicate which option (A, B, C, or D) is the correct answer.
     4. Explanation: Provide a brief explanation of why the correct answer is correct.
 
-    Please ensure that the questions are varied and cover different aspects of the topic. The difficulty level should be moderate, suitable for an average learner.
+    The difficulty level of the questions should be "${difficulty}". Ensure that the questions are varied and cover different aspects of the topic.
 
     Example:
     [
