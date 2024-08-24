@@ -1,7 +1,7 @@
 import express from 'express'
-import { SignUpController } from '../Controllers/SignUP.js'
-import { LoginController } from '../Controllers/Login.js'
-import { SignOutController } from '../Controllers/SignOut.js'
+import { SignUpController } from '../Controllers/Auth/SignUP.js'
+import { LoginController } from '../Controllers/Auth/Login.js'
+import { SignOutController } from '../Controllers/Auth/SignOut.js'
 
 const AuthRouter = express.Router()
 
