@@ -19,7 +19,7 @@ const generationConfig = {
   responseMimeType: 'text/plain',
 }
 
-export const chatSessions = model.startChat({
+export const ChatSessions = model.startChat({
   generationConfig,
   // safetySettings: Adjust safety settings
   // See https://ai.google.dev/gemini-api/docs/safety-settings
