@@ -13,8 +13,8 @@ export const QuestionPrompt = (numberOfQuestions, topic, difficulty) => {
     [
       {
         "Question": "What is the capital of France?",
-        "Options": ["A) Berlin", "B) Madrid", "C) Paris", "D) Rome"],
-        "Correct Answer": "C",
+        "Options": ["Berlin", "Madrid", "Paris", "Rome"],
+        "Correct Answer": Paris",
         "Explanation": "Paris is the capital and largest city of France."
       },
       ...
