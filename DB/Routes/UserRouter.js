@@ -9,7 +9,7 @@ const UserRouter = express.Router()
 const upload = multer({ storage: multer.memoryStorage() })
 UserRouter.put('/UpdateUser', upload.single('image'), UpdateUserController)
 UserRouter.delete('/DeleteQuiz', deleteAiQuestion)
-UserRouter.get('/GetQuiz', GetAiQuestionsController)
+UserRouter.get('/DeleteQuiz', GetAiQuestionsController)
 UserRouter.get('/GetUser', GetUserController)
 //  UserEmail as query in the get
 /**UserID, RandomID as query in the delete */
