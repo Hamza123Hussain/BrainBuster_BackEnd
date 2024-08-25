@@ -1,38 +1,30 @@
 import { doc, setDoc } from 'firebase/firestore'
 import { v4 as uuid } from 'uuid'
-
 import { DB } from '../../../Firebase.js'
 import { ChatSessions } from '../../../GemniConfig.js'
 import { QuestionPrompt } from '../../Prompts/Questions.js'
 export const AiQuestionController = async (req, res) => {
   const RandomID = uuid() // Unique ID for the document
   try {
-    const { Topic, NumberOfQuestions, UserEmail, Difficulty } = req.body
-
+    const { Topic, NumberOfQuestions, UserEmail, Difficulty, UserName } =
+      req.body
     if (!UserEmail) {
       return res.status(400).json({ error: 'UserEmail is required' })
     }
-
     if (!Difficulty) {
       return res.status(400).json({ error: 'Difficulty is required' })
     }
-
     const sanitizedUserEmail = UserEmail.replace(/[@.]/g, '_')
-
     // Generate the AiQuestion using Gemini AI
     const prompt = QuestionPrompt(NumberOfQuestions, Topic, Difficulty)
-    console.log('Prompt:', prompt)
-
+    // console.log('Prompt:', prompt)
     const Gemini_Response = await ChatSessions.sendMessage(prompt) // Pass the prompt string here
-    console.log('Gemini_Response:', Gemini_Response)
-
+    // console.log('Gemini_Response:', Gemini_Response)
     const AiResponse = await Gemini_Response.response.text()
-    console.log('AI Response Text:', AiResponse)
-
+    // console.log('AI Response Text:', AiResponse)
     // Sanitize AI response to remove backticks and trim any whitespace
     const sanitizedAiResponse = AiResponse.replace(/```json|```/g, '').trim()
-    console.log('Sanitized AI Response:', sanitizedAiResponse)
-
+    // console.log('Sanitized AI Response:', sanitizedAiResponse)
     // Parse AI response as JSON
     let validatedQuestions
     try {
@@ -44,7 +36,6 @@ export const AiQuestionController = async (req, res) => {
         details: sanitizedAiResponse,
       })
     }
-
     if (
       Array.isArray(validatedQuestions) &&
       validatedQuestions.length === NumberOfQuestions
@@ -60,11 +51,15 @@ export const AiQuestionController = async (req, res) => {
         ),
         {
           MessageID: uuid(),
+          Topic,
+          NumberOfQuestions,
+          UserEmail,
+          Difficulty,
           Questions: validatedQuestions,
           ID: RandomID,
+          CreatedBy: UserName,
         }
       )
-
       // Respond with the AiQuestions
       res.status(200).json(validatedQuestions)
     } else {
