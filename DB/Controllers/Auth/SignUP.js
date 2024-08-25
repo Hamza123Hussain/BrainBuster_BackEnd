@@ -1,9 +1,23 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { Auth, DB } from '../../../Firebase.js'
+import { Auth, DB, Storage } from '../../../Firebase.js'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export const SignUpController = async (req, res) => {
   const { email, password, Name } = req.body
+  const image = req.file
+  let imageUrl = ''
+  if (image) {
+    // Sanitize the email to be URL-friendly
+    const sanitizedEmail = email.replace(/[^a-zA-Z0-9]/g, '_')
+    const imagePath = `images/${sanitizedEmail}/${image.originalname}` // Directly use the path string
+    const imageRef = ref(Storage, imagePath)
+    const imageBuffer = image.buffer
+    // Upload the image to Firebase Storage
+    await uploadBytes(imageRef, imageBuffer)
+    // Get the download URL for the image
+    imageUrl = await getDownloadURL(imageRef)
+  }
 
   try {
     // Check if the user already exists
@@ -28,6 +42,7 @@ export const SignUpController = async (req, res) => {
       await setDoc(userDocRef, {
         Name,
         email,
+        imageUrl,
         UserID: UserCredential.user.uid,
       })
 
