@@ -14,17 +14,15 @@ export const AiQuestionController = async (req, res) => {
     if (!Difficulty) {
       return res.status(400).json({ error: 'Difficulty is required' })
     }
+    // Sanitize user email to use as part of the document ID
     const sanitizedUserEmail = UserEmail.replace(/[@.]/g, '_')
-    // Generate the AiQuestion using Gemini AI
+    // Generate the AI question prompt
     const prompt = QuestionPrompt(NumberOfQuestions, Topic, Difficulty)
-    // console.log('Prompt:', prompt)
-    const Gemini_Response = await ChatSessions.sendMessage(prompt) // Pass the prompt string here
-    // console.log('Gemini_Response:', Gemini_Response)
+    // Send prompt to Gemini AI
+    const Gemini_Response = await ChatSessions.sendMessage(prompt)
     const AiResponse = await Gemini_Response.response.text()
-    // console.log('AI Response Text:', AiResponse)
-    // Sanitize AI response to remove backticks and trim any whitespace
+    // Sanitize AI response
     const sanitizedAiResponse = AiResponse.replace(/```json|```/g, '').trim()
-    // console.log('Sanitized AI Response:', sanitizedAiResponse)
     // Parse AI response as JSON
     let validatedQuestions
     try {
@@ -40,15 +38,9 @@ export const AiQuestionController = async (req, res) => {
       Array.isArray(validatedQuestions) &&
       validatedQuestions.length === NumberOfQuestions
     ) {
-      // Save the validated AiQuestions to Firestore
+      // Save the validated AI questions to Firestore
       await setDoc(
-        doc(
-          DB,
-          'AiQuestionSuggest',
-          sanitizedUserEmail,
-          'AiQuestion',
-          RandomID
-        ),
+        doc(DB, 'AIQUIZ', RandomID), // Use RandomID as the document ID
         {
           MessageID: uuid(),
           Topic,
@@ -60,7 +52,7 @@ export const AiQuestionController = async (req, res) => {
           CreatedBy: UserName,
         }
       )
-      // Respond with the AiQuestions
+      // Respond with the AI questions
       res.status(200).json(validatedQuestions)
     } else {
       res
