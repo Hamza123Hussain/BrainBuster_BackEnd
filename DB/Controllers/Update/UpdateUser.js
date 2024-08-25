@@ -1,9 +1,22 @@
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { DB } from '../../../Firebase.js'
+import { DB, Storage } from '../../../Firebase.js'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 export const UpdateUserController = async (req, res) => {
-  const { email, newName, newPassword } = req.body
-
+  const { email, newName } = req.body
+  const image = req.file
+  let imageUrl = ''
+  if (image) {
+    // Sanitize the email to be URL-friendly
+    const sanitizedEmail = email.replace(/[^a-zA-Z0-9]/g, '_')
+    const imagePath = `images/${sanitizedEmail}/${image.originalname}` // Directly use the path string
+    const imageRef = ref(Storage, imagePath)
+    const imageBuffer = image.buffer
+    // Upload the image to Firebase Storage
+    await uploadBytes(imageRef, imageBuffer)
+    // Get the download URL for the image
+    imageUrl = await getDownloadURL(imageRef)
+  }
   try {
     // Reference to the user's document in Firestore
     const userDocRef = doc(DB, 'USERS', email)
@@ -16,22 +29,8 @@ export const UpdateUserController = async (req, res) => {
       return res.status(404).json({ message: 'USER NOT FOUND' })
     }
 
-    // Prepare the data to update
-    const updates = {}
-    if (newName) {
-      updates.Name = newName
-    }
-    if (newPassword) {
-      // Update password in Firebase Authentication (if needed)
-      // Note: Firebase does not support updating passwords directly from Firestore. You must use Firebase Auth methods for that.
-      // For security reasons, this should be handled by an authentication controller.
-      return res
-        .status(400)
-        .json({ message: 'Password update is not handled in this endpoint' })
-    }
-
     // Update user details in Firestore
-    await updateDoc(userDocRef, updates)
+    await updateDoc(userDocRef, { Name: newName, imageUrl })
 
     // Retrieve and return the updated user's data
     const updatedUserDoc = await getDoc(userDocRef)
