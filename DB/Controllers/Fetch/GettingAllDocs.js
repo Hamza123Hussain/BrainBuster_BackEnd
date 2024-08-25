@@ -2,21 +2,16 @@ import { collection, getDocs } from 'firebase/firestore'
 import { DB } from '../../../Firebase.js'
 export const getAllAiQuestions = async (req, res) => {
   try {
-    const { UserID } = req.query // Use req.query instead of req.params
-
-    if (!UserID) {
-      return res.status(400).json({ error: 'UserID and are required' })
-    }
-
-    const querySnapshot = await getDocs(collection(DB, 'AiQuestionSuggest'))
+    // Reference to the AIQUIZ collection
+    const aiQuizRef = collection(DB, 'AIQUIZ')
+    // Get all documents in the AIQUIZ collection
+    const querySnapshot = await getDocs(aiQuizRef)
 
     const allDocuments = []
+    // Iterate through each document in the AIQUIZ collection
     querySnapshot.forEach((docSnapshot) => {
-      docSnapshot.forEach((subCollection) => {
-        allDocuments.push({ id: subCollection.id, ...subCollection.data() })
-      })
+      allDocuments.push({ id: docSnapshot.id, ...docSnapshot.data() })
     })
-
     res.status(200).json(allDocuments)
   } catch (error) {
     console.error('Error fetching all documents:', error)
