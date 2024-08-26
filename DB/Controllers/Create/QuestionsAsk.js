@@ -14,8 +14,6 @@ export const AiQuestionController = async (req, res) => {
     if (!Difficulty) {
       return res.status(400).json({ error: 'Difficulty is required' })
     }
-    // Sanitize user email to use as part of the document ID
-    const sanitizedUserEmail = UserEmail.replace(/[@.]/g, '_')
     // Generate the AI question prompt
     const prompt = QuestionPrompt(NumberOfQuestions, Topic, Difficulty)
     // Send prompt to Gemini AI
