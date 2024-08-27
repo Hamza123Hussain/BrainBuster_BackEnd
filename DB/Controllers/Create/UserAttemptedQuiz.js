@@ -39,6 +39,7 @@ export const UserAttempts = async (req, res) => {
       // Store the user attempt in Firestore
       await setDoc(doc(DB, 'UserAttempts', RandomID), {
         AttemptID: RandomID,
+        AttemptedBy: UserEmail,
         UserData: userData,
         QuizData: {
           CreatedBy,
