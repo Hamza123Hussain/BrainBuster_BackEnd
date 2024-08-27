@@ -50,12 +50,7 @@ export const UserAttempts = async (req, res) => {
         Score,
       })
 
-      return res.status(200).json({
-        AttemptID: RandomID,
-        UserData: userData,
-        QuizData: { CreatedBy, Difficulty, ID, NumberOfQuestions, Topic },
-        Score,
-      })
+      return res.status(200).json(true)
     } catch (error) {
       console.error('Failed to store user attempt:', error)
       return res.status(500).json({ error: 'Failed to store user attempt' })
