@@ -6,11 +6,16 @@ export const UserAttempts = async (req, res) => {
   const RandomID = uuid() // Unique ID for the document
   try {
     const { UserEmail, QuizID, Score } = req.body
+    if (!UserEmail) {
+      return res.status(400).json({ error: 'UserEmail is required' })
+    }
 
-    if (!UserEmail || !QuizID || !Score) {
-      return res
-        .status(400)
-        .json({ error: 'UserEmail, QuizID, and Score are required' })
+    if (!QuizID) {
+      return res.status(400).json({ error: 'QuizID is required' })
+    }
+
+    if (!Score) {
+      return res.status(400).json({ error: 'Score is required' })
     }
 
     // Fetch the quiz document from Firestore
@@ -49,6 +54,7 @@ export const UserAttempts = async (req, res) => {
           Topic,
         },
         Score,
+        CreatedAt: Date.now(),
       })
 
       return res.status(200).json(true)
