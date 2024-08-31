@@ -49,7 +49,7 @@ export const UserAttempts = async (req, res) => {
           NumberOfQuestions,
           Topic,
         },
-        Score,
+        Score: Score ? Score : 0,
         CreatedAt: Date.now(),
       })
 
