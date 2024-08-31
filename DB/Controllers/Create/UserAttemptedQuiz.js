@@ -14,10 +14,6 @@ export const UserAttempts = async (req, res) => {
       return res.status(400).json({ error: 'QuizID is required' })
     }
 
-    if (!Score) {
-      return res.status(400).json({ error: 'Score is required' })
-    }
-
     // Fetch the quiz document from Firestore
     const quizDocRef = doc(DB, 'AIQUIZ', QuizID)
     const quizDocSnap = await getDoc(quizDocRef)
